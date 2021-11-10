@@ -13,7 +13,11 @@ public class MainMenuCommand implements Command {
             "skills", new SkillsCommand(),
             "projects", new ProjectsCommand(),
             "companies", new CompaniesCommand(),
-            "customers", new CustomersCommand()
+            "customers", new CustomersCommand(),
+            "developer_companies", new DeveloperCompaniesCommand(),
+            "developer_skills", new DeveloperSkillsCommand(),
+            "customers_projects", new CustomersProjectsCommand(),
+            "project_developers", new ProjectDevelopersCommand()
     );
 
     @Override
@@ -31,6 +35,7 @@ public class MainMenuCommand implements Command {
     @Override
     public void printActiveMenu() {
         System.out.println("----------Main menu----------");
-        System.out.println("Command list: " + this.commands.keySet());
+        System.out.println("Menu list: ");
+        commands.forEach((k, v) -> System.out.println("\t*" + k));
     }
 }
