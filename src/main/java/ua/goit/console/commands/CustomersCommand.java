@@ -8,9 +8,9 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class CustomersCommand implements Command {
-    
+
     private static final CustomerDao dao = CustomerDao.getInstance();
-    
+
     @Override
     public void handle(String params, Consumer<Command> setActive) {
         String command = params.split(" ")[0];
@@ -27,11 +27,15 @@ public class CustomersCommand implements Command {
 
     private void create(String params) { // customers create NAME [description]
         String[] paramsArray = params.split(" ");
+
+        if (paramsArray.length == 0) return;
+
         Customer customer = new Customer(1L, paramsArray[0]);
 
         try {
             customer.setDescription(paramsArray[1]);
-        } catch (NumberFormatException ignore) {}
+        } catch (ArrayIndexOutOfBoundsException ignore) {
+        }
 
         Optional<Customer> createdEntity = dao.create(customer);
 
@@ -45,7 +49,23 @@ public class CustomersCommand implements Command {
     private void get(String params) {  // customers get ID
         String[] paramsArray = params.split(" ");
 
-        dao.get(Long.parseLong(paramsArray[0])).ifPresent(System.out::println);
+        if (paramsArray.length == 0) return;
+
+        long id = 1L;
+
+        try {
+            id = Long.parseLong(paramsArray[0]);
+        } catch (NumberFormatException e) {
+            System.out.println("\t***Wrong ID format***\n\tDefault ID = 1");
+        }
+
+        Optional<Customer> customer = dao.get(id);
+
+        if (customer.isPresent()) {
+            System.out.println(customer.get());
+        } else {
+            System.out.printf("Customer with ID=%d not found.\n", id);
+        }
     }
 
     private void getAll() { // projects getAll
@@ -55,7 +75,18 @@ public class CustomersCommand implements Command {
     private void delete(String params) {    // customers delete ID
         String[] paramsArray = params.split(" ");
 
-        dao.get(Long.parseLong(paramsArray[0])).ifPresent(customer -> {
+        if (paramsArray.length == 0) return;
+
+        long id;
+
+        try {
+            id = Long.parseLong(paramsArray[0]);
+        } catch (NumberFormatException e) {
+            System.out.println("\t***Wrong ID format***");
+            return;
+        }
+
+        dao.get(id).ifPresent(customer -> {
             dao.delete(customer.getId());
             System.out.println("Record was deleted.");
         });
@@ -64,12 +95,24 @@ public class CustomersCommand implements Command {
     private void update(String params) {    // customers update ID NAME [description]
         String[] paramsArray = params.split(" ");
 
-        Optional<Customer> customer = dao.get(Long.parseLong(paramsArray[0]));
+        if (paramsArray.length == 0) return;
+
+        long id;
+
+        try {
+            id = Long.parseLong(paramsArray[0]);
+        } catch (NumberFormatException e) {
+            System.out.println("\t***Wrong ID format***");
+            return;
+        }
+
+        Optional<Customer> customer = dao.get(id);
 
         if (customer.isPresent()) {
-            Customer result = new Customer(customer.get().getId(), paramsArray[1]);
+            Customer result = null;
 
             try {
+                result = new Customer(customer.get().getId(), paramsArray[1]);
                 result.setDescription(paramsArray[2]);
             } catch (ArrayIndexOutOfBoundsException ignore) {
             }

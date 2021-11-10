@@ -27,6 +27,9 @@ public class SkillsCommand implements Command {
 
     private void create(String params) { // skills create BRANCH SKILL_LEVEL
         String[] paramsArray = params.split(" ");
+
+        if (paramsArray.length < 2) return;
+
         Skill newSkill = new Skill(1L, paramsArray[0], paramsArray[1]);
 
         Optional<Skill> createdEntity = dao.create(newSkill);
@@ -39,9 +42,25 @@ public class SkillsCommand implements Command {
     }
 
     private void get(String params) {  // developers get ID
-        String[] s = params.split(" ");
+        String[] paramsArray = params.split(" ");
 
-        dao.get(Long.parseLong(s[0])).ifPresent(System.out::println);
+        if (paramsArray.length == 0) return;
+
+        long id = 1L;
+
+        try {
+            id = Long.parseLong(paramsArray[0]);
+        } catch (NumberFormatException e) {
+            System.out.println("\t***Wrong ID format***\n\tDefault ID = 1");
+        }
+
+        Optional<Skill> skill = dao.get(id);
+
+        if (skill.isPresent()) {
+            System.out.println(skill.get());
+        } else {
+            System.out.printf("Skill with ID=%d not found.\n", id);
+        }
     }
 
     private void getAll() { // developers getAll
@@ -51,7 +70,18 @@ public class SkillsCommand implements Command {
     private void delete(String params) {    // developers delete ID
         String[] paramsArray = params.split(" ");
 
-        dao.get(Long.parseLong(paramsArray[0])).ifPresent(skill -> {
+        if(paramsArray.length == 0) return;
+
+        long id;
+
+        try {
+            id = Long.parseLong(paramsArray[0]);
+        } catch (NumberFormatException e) {
+            System.out.println("\t***Wrong ID format.***");
+            return;
+        }
+
+        dao.get(id).ifPresent(skill -> {
             dao.delete(skill.getId());
             System.out.println("Record was deleted.");
         });
@@ -60,7 +90,18 @@ public class SkillsCommand implements Command {
     private void update(String params) {    // developers update ID BRANCH SKILL_LEVEL
         String[] paramsArray = params.split(" ");
 
-        Optional<Skill> skill = dao.get(Long.parseLong(paramsArray[0]));
+        if (paramsArray.length < 3) return;
+
+        long id;
+
+        try {
+            id = Long.parseLong(paramsArray[0]);
+        } catch (NumberFormatException e) {
+            System.out.println("\t***Wrong ID format.***");
+            return;
+        }
+
+        Optional<Skill> skill = dao.get(id);
 
         if (skill.isPresent()) {
             Skill result = new Skill(skill.get().getId(), paramsArray[0], paramsArray[1]);

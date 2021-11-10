@@ -24,6 +24,8 @@ public class ProjectDao extends AbstractDao<Project> {
 
     @Override
     public Optional<Project> create(Project newEntity) {
+        if (newEntity == null) return Optional.empty();
+
         SqlExecutor.execute(sqlCreate, ps -> {
             ps.setLong(1, newEntity.getCompanyId());
             ps.setString(2, newEntity.getName());
@@ -49,6 +51,8 @@ public class ProjectDao extends AbstractDao<Project> {
 
     @Override
     public int update(Project entity) {
+        if (entity == null) return -1;
+
         return SqlExecutor.execute(sqlUpdate, ps -> {
             ps.setLong(5, entity.getId());
             ps.setLong(1, entity.getCompanyId());

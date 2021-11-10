@@ -60,6 +60,8 @@ public class DeveloperDao extends AbstractDao<Developer> {
 
     @Override
     public Optional<Developer> create(Developer newEntity) {
+        if (newEntity == null) return Optional.empty();
+
         SqlExecutor.execute(sqlCreate, ps -> {
             ps.setString(1, newEntity.getName());
             ps.setInt(2, newEntity.getAge());
@@ -90,6 +92,8 @@ public class DeveloperDao extends AbstractDao<Developer> {
 
     @Override
     public int update(Developer entity) {
+        if (entity == null) return -1;
+
         return SqlExecutor.execute(sqlUpdate, ps -> {
             ps.setLong(6, entity.getId());
             ps.setString(1, entity.getName());

@@ -23,6 +23,8 @@ public class CustomerDao extends AbstractDao<Customer> {
 
     @Override
     public Optional<Customer> create(Customer newEntity) {
+        if (newEntity == null) return Optional.empty();
+
         SqlExecutor.execute(sqlCreate, ps -> {
             ps.setString(1, newEntity.getName());
             ps.setString(2, newEntity.getDescription());
@@ -47,6 +49,8 @@ public class CustomerDao extends AbstractDao<Customer> {
 
     @Override
     public int update(Customer entity) {
+        if (entity == null) return -1;
+
         return SqlExecutor.execute(sqlUpdate, ps -> {
             ps.setLong(3, entity.getId());
             ps.setString(1, entity.getName());

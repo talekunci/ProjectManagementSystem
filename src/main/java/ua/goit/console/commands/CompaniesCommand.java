@@ -27,11 +27,14 @@ public class CompaniesCommand implements Command {
 
     private void create(String params) { // company create NAME [description]
         String[] paramsArray = params.split(" ");
+
+        if (paramsArray.length == 0) return;
+
         Company company = new Company(1L, paramsArray[0]);
 
         try {
             company.setDescription(paramsArray[1]);
-        } catch (NumberFormatException ignore) {
+        } catch (ArrayIndexOutOfBoundsException ignore) {
         }
 
         Optional<Company> createdEntity = dao.create(company);
@@ -46,7 +49,23 @@ public class CompaniesCommand implements Command {
     private void get(String params) {  // company get ID
         String[] paramsArray = params.split(" ");
 
-        dao.get(Long.parseLong(paramsArray[0])).ifPresent(System.out::println);
+        if (paramsArray.length == 0) return;
+
+        long id = 1L;
+
+        try {
+            id = Long.parseLong(paramsArray[0]);
+        } catch (NumberFormatException e) {
+            System.out.println("\t***Wrong ID format***\n\tDefault ID = 1");
+        }
+
+        Optional<Company> company = dao.get(id);
+
+        if (company.isPresent()) {
+            System.out.println(company.get());
+        } else {
+            System.out.printf("Company with ID=%d not found.\n", id);
+        }
     }
 
     private void getAll() { // company getAll
@@ -56,23 +75,46 @@ public class CompaniesCommand implements Command {
     private void delete(String params) {    // company delete ID
         String[] paramsArray = params.split(" ");
 
-        dao.get(Long.parseLong(paramsArray[0])).ifPresent(company -> {
+        if (paramsArray.length == 0) return;
+
+        long id;
+
+        try {
+            id = Long.parseLong(paramsArray[0]);
+        } catch (NumberFormatException e) {
+            System.out.println("\t***Wrong ID format***");
+            return;
+        }
+
+        dao.get(id).ifPresent(company -> {
             dao.delete(company.getId());
             System.out.println("Record was deleted.");
         });
+
     }
 
     private void update(String params) {    // company update ID NAME [description]
         String[] paramsArray = params.split(" ");
 
-        Optional<Company> company = dao.get(Long.parseLong(paramsArray[0]));
+        if (paramsArray.length == 0) return;
+
+        long id;
+
+        try {
+            id = Long.parseLong(paramsArray[0]);
+        } catch (NumberFormatException e) {
+            System.out.println("\t***Wrong ID format***");
+            return;
+        }
+
+        Optional<Company> company = dao.get(id);
 
         if (company.isPresent()) {
             Company result = new Company(company.get().getId(), paramsArray[1]);
 
             try {
                 result.setDescription(paramsArray[2]);
-            } catch (ArrayIndexOutOfBoundsException | NumberFormatException ignore) {
+            } catch (ArrayIndexOutOfBoundsException ignore) {
             }
 
             int update = dao.update(result);

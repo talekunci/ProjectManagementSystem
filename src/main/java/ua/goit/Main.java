@@ -48,7 +48,7 @@ public class Main {
                 .forEach(System.out::println);
 
 
-        System.out.println("\nList of Java developers by skill_id");
+        System.out.println("\nList of Java developers by skill_level");
         developerDao.getDevelopersBySkill(
                 skillDao.getAll()
                         .stream()
