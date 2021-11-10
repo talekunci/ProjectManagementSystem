@@ -29,7 +29,7 @@ public class ProjectsCommand implements Command {
         }
     }
 
-    private void create(String params) { // projects create COMPANY_ID NAME [description] [creation_date]
+    private void create(String params) { // projects create COMPANY_ID NAME [description] [cost] [creation_date]
         String[] paramsArray = params.split(" ");
 
         if (paramsArray.length < 2) return;
@@ -38,7 +38,8 @@ public class ProjectsCommand implements Command {
 
         try {
             project.setDescription(paramsArray[2]);
-            project.setCreationDate(Date.valueOf(paramsArray[3]));
+            project.setCost(Integer.parseInt(paramsArray[3]));
+            project.setCreationDate(Date.valueOf(paramsArray[4]));
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException ignore) {
         }
 
@@ -108,7 +109,7 @@ public class ProjectsCommand implements Command {
 
     }
 
-    private void update(String params) {    // projects update ID COMPANY_ID NAME [description] [creation_date]
+    private void update(String params) {    // projects update ID COMPANY_ID NAME [description] [cost] [creation_date]
         String[] paramsArray = params.split(" ");
 
         if (paramsArray.length < 3) return;
@@ -129,7 +130,8 @@ public class ProjectsCommand implements Command {
 
             try {
                 result.setDescription(paramsArray[3]);
-                result.setCreationDate(Date.valueOf(paramsArray[4]));
+                result.setCost(Integer.parseInt(paramsArray[4]));
+                result.setCreationDate(Date.valueOf(paramsArray[5]));
             } catch (ArrayIndexOutOfBoundsException | NumberFormatException ignore) {
             }
 
@@ -149,11 +151,11 @@ public class ProjectsCommand implements Command {
     public void printActiveMenu() {
         System.out.println("--------Project menu--------");
         System.out.println("Commands: ");
-        System.out.println("\t* create COMPANY_ID NAME [description] [creation_date]");
+        System.out.println("\t* create COMPANY_ID NAME [description] [cost] [creation_date]");
         System.out.println("\t* get ID");
         System.out.println("\t* getAll");
         System.out.println("\t* getAllAndFormattedPrint");
-        System.out.println("\t* update ID COMPANY_ID NAME [description] [creation_date]");
+        System.out.println("\t* update ID COMPANY_ID NAME [description] [cost] [creation_date]");
         System.out.println("\t* delete ID");
     }
 }

@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public class ProjectDao extends AbstractDao<Project> {
 
-    private final String sqlCreate = String.format("insert into %s(company_id, name, description, creation_date) values(?, ?, ?, ?)", getTableName());
-    private final String sqlUpdate = String.format("update %s set company_id = ?, name = ?, description = ? where id = ?", getTableName());
+    private final String sqlCreate = String.format("insert into %s(company_id, name, description, cost, creation_date) values(?, ?, ?, ?, ?)", getTableName());
+    private final String sqlUpdate = String.format("update %s set company_id = ?, name = ?, description = ?, cost = ? where id = ?", getTableName());
 
     private static ProjectDao instance;
 
@@ -30,7 +30,8 @@ public class ProjectDao extends AbstractDao<Project> {
             ps.setLong(1, newEntity.getCompanyId());
             ps.setString(2, newEntity.getName());
             ps.setString(3, newEntity.getDescription());
-            ps.setDate(4, newEntity.getCreationDate());
+            ps.setInt(4, newEntity.getCost());
+            ps.setDate(5, newEntity.getCreationDate());
         });
         return Optional.of(newEntity);
     }
@@ -43,7 +44,8 @@ public class ProjectDao extends AbstractDao<Project> {
 
         try {
             project.setDescription(params[3]);
-            project.setCreationDate(new Date(Date.valueOf(params[4]).getTime()));
+            project.setCost(Integer.parseInt(params[4]));
+            project.setCreationDate(new Date(Date.valueOf(params[5]).getTime()));
         } catch (ArrayIndexOutOfBoundsException ignore) {}
 
         return Optional.of(project);
@@ -58,7 +60,8 @@ public class ProjectDao extends AbstractDao<Project> {
             ps.setLong(1, entity.getCompanyId());
             ps.setString(2, entity.getName());
             ps.setString(3, entity.getDescription());
-            ps.setDate(4, entity.getCreationDate());
+            ps.setInt(4, entity.getCost());
+            ps.setDate(5, entity.getCreationDate());
         });
     }
 
@@ -74,6 +77,7 @@ public class ProjectDao extends AbstractDao<Project> {
                 resultSet.getLong("company_id"),
                 resultSet.getString("name"),
                 resultSet.getString("description"),
+                resultSet.getInt("cost"),
                 resultSet.getDate("creation_date")
         );
     }

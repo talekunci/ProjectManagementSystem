@@ -10,6 +10,7 @@ public class Project implements Identity {
     private Long companyId;
     private String name;
     private String description;
+    private int cost;
     private Date creationDate;
 
     public Project(Long id, Long companyId, String name) {
@@ -19,11 +20,12 @@ public class Project implements Identity {
         creationDate = new Date(new java.util.Date().getTime());
     }
 
-    public Project(Long id, Long companyId, String name, String description, Date creationDate) {
+    public Project(Long id, Long companyId, String name, String description, int cost, Date creationDate) {
         this.id = id;
         this.companyId = companyId;
         this.name = name;
         this.description = description;
+        this.cost = cost;
         this.creationDate = creationDate;
     }
 
@@ -68,6 +70,14 @@ public class Project implements Identity {
         this.creationDate = creationDate;
     }
 
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -92,6 +102,7 @@ public class Project implements Identity {
                 ", companyId=" + companyId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", cost=" + cost +
                 ", creationDate=" + creationDate +
                 '}';
     }
