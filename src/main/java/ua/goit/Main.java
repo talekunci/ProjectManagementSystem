@@ -22,8 +22,8 @@ public class Main {
                     false,
                     true);
 
-            scriptRunner.runScript(new FileReader("src/main/resources/initDB.sql"));
-            scriptRunner.runScript(new FileReader("src/main/resources/populateDB.sql"));
+            scriptRunner.runScript(new FileReader("src/main/resources/db/migration/initDB.sql"));
+            scriptRunner.runScript(new FileReader("src/main/resources/db/migration/populateDB.sql"));
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
